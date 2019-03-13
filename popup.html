@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <link href="css/buefy.min.css" rel="stylesheet">
+  <link href="css/materialdesignicons.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="js/jquery-1.8.3.min.js"></script>
+</head>
+
+<body>
+  <div id="popup" v-cloak style="width: 600px;">
+    <section class="hero is-danger is-bold">
+      <div class="hero-body has-text-centered" style="padding: 4px 0px 6px;">
+        <h2 class="subtitle">
+          Apply Custom Script
+        </h2>
+    </section>
+    <div class="container">
+      <b-tabs position="is-centered" class="block">
+        <b-tab-item label="Autocomplete">
+          <a @click="applyScript('autocomplete_keys')" class="button is-success is-fullwidth">Apply Autocomplete Keys</a>
+        </b-tab-item>
+        <!-- SSC -->
+        <b-tab-item label="SSC">
+          <div class="box">
+            <article class="media">
+              <div class="media-content" style="overflow-x: inherit;">
+                <div class="content">
+                  <a @click="applyScript('scc_basic_info')" class="is-active">
+                    <strong>FILL BASIC DETAILS</strong>
+                  </a>
+                  <code>https://ssc.nic.in/Registration/Home</code>
+                </div>
+              </div>
+            </article>
+          </div>
+        </b-tab-item>
+        <!-- Railway Board -->
+        <b-tab-item label="Railway">
+          <div class="box">
+            <article class="media">
+              <div class="media-content" style="overflow-x: inherit;">
+                <div class="content">
+                  <a @click="applyScript('railway_rrb')" class="is-active">
+                    <strong>New Registration (RRB)</strong>
+                  </a>
+                  <br>
+                  <code>https://bhopal.rly-rect-appn.in/rrbmic2019/new_registration.php{*}</code>
+                </div>
+              </div>
+            </article>
+          </div>
+        </b-tab-item>
+        <!-- UPSC -->
+        <b-tab-item label="UPSC">
+          <div class="box">
+            <article class="media">
+              <div class="media-content" style="overflow-x: inherit;">
+                <div class="content">
+                  <a @click="applyScript('upsc_online')" class="is-active">
+                    <strong>Registration (UPSC)</strong>
+                  </a>
+                  <br>
+                  <code>https://upsconline.nic.in/tpform1.php{*}</code>
+                </div>
+              </div>
+            </article>
+          </div>
+        </b-tab-item>
+        <!-- Certificate Registration -->
+        <b-tab-item label="Certificate">
+          <div class="box">
+            <article class="media">
+              <div class="media-content" style="overflow-x: inherit;">
+                <div class="content">
+                  <a @click="applyScript('ccc_nielit')" class="is-active">
+                    <strong>Nielit CCC</strong>
+                  </a>
+                  <code style="font-size: 13px; word-break: break-word;">https://student.nielit.gov.in/CAND/CertificateRegistration.aspx{*}</code>
+                </div>
+              </div>
+            </article>
+            <article class="media">
+              <div class="media-content" style="overflow-x: inherit;">
+                <div class="content">
+                  <a @click="applyScript('o_level_nielit')" class="is-active">
+                    <strong>Nielit O Level</strong>
+                  </a>
+                  <code style="font-size: 13px; word-break: break-word;">https://student.nielit.gov.in/CAND/CertificateRegistration.aspx{*}</code>
+                </div>
+              </div>
+            </article>
+          </div>
+        </b-tab-item>
+      </b-tabs>
+    </div>
+  </div>
+  <script src="js/vue.min.js"></script>
+  <script src="js/buefy.min.js"></script>
+  <script src="js/popup.min.js"></script>
+</body>
+
+</html>

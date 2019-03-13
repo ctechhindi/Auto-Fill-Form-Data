@@ -1,0 +1,24 @@
+{
+  "name": "auto-fill-from-data",
+  "version": "0.0.2",
+  "description": "Auto fill and autocomplete user data with key name",
+  "main": "index.js",
+  "dependencies": {
+    "chrome-extension-builder": "0.0.5",
+    "init": "^0.1.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ctechhindi/Auto-Fill-Form-Data.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ctechhindi/Auto-Fill-Form-Data/issues"
+  },
+  "homepage": "https://github.com/ctechhindi/Auto-Fill-Form-Data#readme"
+}

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <link href="css/buefy.min.css" rel="stylesheet">
+  <link href="css/materialdesignicons.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="js/jquery-1.8.3.min.js"></script>
+  <script src="plugins/awesome-notifications/index.var.js"></script>
+  <link href="plugins/awesome-notifications/style.css" rel="stylesheet">
+  <link href="plugins/jsoneditor/jsoneditor.min.css" rel="stylesheet">
+  <title>Auto Fill Form Data</title>
+  <link href="css/custom.css" rel="stylesheet">
+  <script src="js/custom.js"></script>
+</head>
+
+<body>
+  <div id="overlay">
+    <div class="lds-hourglass"></div>
+  </div>
+
+  <div id="keys" v-cloak>
+    <section class="section">
+      <div class="container">
+        <nav class="level">
+          <!-- Left side -->
+          <div class="level-left">
+            <div class="level-item">
+              <p class="title"><strong>Autocomplete Keys</strong></p>
+            </div>
+          </div>
+          <!-- Right side -->
+          <div class="level-right">
+            <p class="level-item">
+              <a @click="saveKeys" class="button is-success">
+                <b-icon icon="check"></b-icon>
+                <span>Save Keys</span>
+              </a>
+            </p>
+            <p class="level-item">
+              <a @click="resetKeys" class="button is-danger">
+                <b-icon icon="restore"></b-icon>
+                <span>Reset Keys</span>
+              </a>
+            </p>
+          </div>
+        </nav>
+        <!-- Autocomplete Keys :: START -->
+        <div id="jsoneditor"></div>
+        <!-- Autocomplete Keys :: END -->
+      </div>
+    </section>
+  </div>
+
+  <script src="plugins/jsoneditor/jsoneditor.min.js"></script>
+  <script src="js/vue.min.js"></script>
+  <script src="js/buefy.min.js"></script>
+  <script src="js/keys.js"></script>
+</body>
+</html>

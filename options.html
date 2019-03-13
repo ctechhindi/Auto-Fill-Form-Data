@@ -1,0 +1,1878 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <link href="css/buefy.min.css" rel="stylesheet">
+  <link href="css/materialdesignicons.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="js/jquery-1.8.3.min.js"></script>
+  <script src="plugins/awesome-notifications/index.var.js"></script>
+  <link href="plugins/awesome-notifications/style.css" rel="stylesheet">
+  <!-- <link href="plugins/jsoneditor/jsoneditor.min.css" rel="stylesheet"> -->
+  <title>Auto Fill Form Data</title>
+  <link href="css/custom.min.css" rel="stylesheet">
+  <script src="js/custom.min.js"></script>
+</head>
+
+<body>
+  <div id="overlay">
+    <div class="lds-hourglass"></div>
+  </div>
+  <div id="app" v-cloak>
+    <section class="hero is-primary is-bold">
+      <div class="hero-body">
+        <div class="container">
+          <nav class="level">
+            <!-- Left side -->
+            <div class="level-left">
+              <div class="level-item">
+                <div>
+                  <p class="title" style="font-family: cursive;">
+                    {{ title }}
+                    <span class="tag is-dark" v-text="version"></span>
+                  </p>
+                  <p style="padding-top: 10px; font-size: 13px;" class="heading" v-text="description"></p>
+                </div>
+              </div>
+            </div>
+            <!-- Right side -->
+            <div class="level-right has-text-centered">
+              <p class="level-item is-shady"><a href="https://bit.ly/ctechhindi-channel" target="_black"
+                  title="YouTube">
+                  <b-icon icon="youtube-tv"></b-icon>
+                </a></p>
+              <p class="level-item is-shady"><a href="https://www.facebook.com/speedtypingtutor" target="_black"
+                  title="Facebook">
+                  <b-icon icon="facebook"></b-icon>
+                </a></p>
+              <p class="level-item is-shady"><a href="https://github.com/ctechhindi" target="_black" title="GitHub">
+                  <b-icon icon="github-circle"></b-icon>
+                </a></p>
+              <p class="level-item is-shady"><a href="https://stackoverflow.com/users/9976176/c-tech-hindi"
+                  target="_black" title="Stack Overflow">
+                  <b-icon icon="stack-overflow"></b-icon>
+                </a></p>
+              <p class="level-item is-shady"><a href="https://twitter.com/ctechindi" target="_black" title="Twitter">
+                  <b-icon icon="twitter"></b-icon>
+                </a></p>
+              <p class="level-item is-shady"><a href="https://jeevan15498.github.io" target="_black" title="Site">
+                  <b-icon icon="web"></b-icon>
+                </a></p>
+            </div>
+          </nav>
+          <p class="has-text-centered-mobile" style="font-family: cursive; margin: -19px 0px -20px;">@jeevan15498</p>
+        </div>
+      </div>
+    </section>
+    <section>
+      <b-tabs v-model="activeTab" position="is-centered" expanded class="block">
+        <!-- Application Settings :: START -->
+        <b-tab-item icon="settings" label="Settings">
+          <section class="">
+            <div class="container">
+              <div class="field">
+                <b-switch v-model="appStatus">
+                  <div v-if="appStatus">
+                    The application has started.
+                    <p>
+                      <code class="has-text-success">एप्लीकेशन चालू हो गयी है </code>
+                    </p>
+                  </div>
+                  <div v-else>
+                    Click to start the application.
+                    <p>
+                      <code>एप्लीकेशन को चालू करने के लिये क्लिक करे</code>
+                    </p>
+                  </div>
+                </b-switch>
+              </div>
+            </div>
+          </section>
+        </b-tab-item>
+        <!-- Application Settings :: END -->
+
+        <!-- All User's Information :: START -->
+        <b-tab-item icon="database" label="All User's Information">
+          <div class="">
+            <nav class="level">
+              <!-- Left side -->
+              <div class="level-left">
+                <div class="level-item">
+                  <p class="subtitle is-5">
+                    <b-icon icon="database" type="is-primary" size="is-medium"></b-icon>
+                    <strong>All User's Data</strong>
+                  </p>
+                </div>
+              </div>
+              <!-- Right side -->
+              <div class="level-right">
+                <p class="level-item">
+                  <a @click="activeTab = 2" class="button is-success">
+                    <b-icon icon="account-plus"></b-icon>
+                    <span>Add New User</span>
+                  </a>
+                </p>
+                <p class="level-item">
+                  <a @click="isImportModalActive = true" class="button is-danger">
+                    <b-icon icon="database-import"></b-icon>
+                    <span>Import User Data</span>
+                  </a>
+                </p>
+                <p class="level-item">
+                  <a href="keys.html" class="button is-warning">
+                    <b-icon icon="key"></b-icon>
+                    <span>Autocomplete Keys</span>
+                  </a>
+                </p>
+              </div>
+            </nav>
+            <hr>
+            <!-- Empty Data -->
+            <div v-if="userData === false || Object.keys(userData).length === 0">
+              <div class="columns is-mobile has-text-centered">
+                <div class="column is-half is-offset-one-quarter">
+                  <b-icon icon="database-search" size="is-large" type="is-danger"></b-icon>
+                  <h1 class="title has-text-danger">Data Not Found!</h1>
+                  <h2 class="subtitle">User's data not exist.</h2>
+                </div>
+              </div>
+            </div>
+            <table class="table is-bordered is-fullwidth"
+              v-if="userData !== false && Object.keys(userData).length !== 0">
+              <thead>
+                <tr>
+                  <th>Active</th>
+                  <th>User ID</th>
+                  <th>Full Name</th>
+                  <th>Father Name</th>
+                  <th>Mother Name</th>
+                  <th>Gender</th>
+                  <th>Date of Birth</th>
+                  <th style="width: 220px;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(item, index) in userData" :key="`item-${index}`" :id="`std-${index}`"
+                  v-if="userData !== false && Object.keys(userData).length !== 0">
+                  <td>
+                    <b-radio type="is-success" v-model="activeUserID" :native-value="index"> Active</b-radio>
+                  </td>
+                  <td>
+                    <a @click="updateUserData(index);">{{ index }}</a>
+                  </td>
+                  <td>{{ item.firstName }} {{ item.middleName }} {{ item.lastName }}</td>
+                  <td>{{ item.fatherName }}</td>
+                  <td>{{ item.motherName }}</td>
+                  <td>{{ item.gender }}</td>
+                  <td>{{ item.dob }}</td>
+                  <td>
+                    <div class="field has-addons">
+                      <p class="control">
+                        <a @click="exportUserData(index);" class="button is-warning">
+                          <span class="icon is-small">
+                            <b-icon icon="database-export"></b-icon>
+                          </span>
+                          <span>Export</span>
+                        </a>
+                      </p>
+                      <p class="control">
+                        <a @click="notifier.confirm('Are you sure delete user data?', deleteUserData(index))"
+                          class="button is-danger">
+                          <span class="icon is-small">
+                            <b-icon icon="delete"></b-icon>
+                          </span>
+                          <span>Delete</span>
+                        </a>
+                      </p>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </b-tab-item>
+        <!-- All User's Information :: END -->
+
+        <!-- Add New User :: START -->
+        <b-tab-item icon="account-plus" label="Add New User">
+          <nav class="level">
+            <!-- Left side -->
+            <div class="level-left">
+              <div class="level-item">
+                <p class="subtitle is-5">
+                  <strong>Add/Update User Data</strong>
+                </p>
+              </div>
+            </div>
+            <!-- Right side -->
+            <div class="level-right">
+              <p class="level-item">
+                <button class="button is-success" @click="saveUserInfoData()">
+                  <b-icon icon="check"></b-icon>
+                  <span>Save Information</span>
+                </button>
+              </p>
+              <p class="level-item">
+                <a @click="clearAddUserFormData" class="button is-danger">
+                  <b-icon icon="delete-forever"></b-icon>
+                  <span>Clear Form Data</span>
+                </a>
+              </p>
+            </div>
+          </nav>
+          <!-- Basic Information : START -->
+          <b-collapse class="card">
+            <div slot="trigger" slot-scope="props" class="card-header has-background-info">
+              <p class="card-header-title has-text-white">Basic Information</p>
+              <a class="card-header-icon has-text-white">
+                <b-icon :icon="props.open ? 'menu-down' : 'menu-up'"></b-icon>
+              </a>
+            </div>
+            <div class="card-content">
+              <div class="content">
+                <div class="columns">
+                  <div class="column">
+                    <b-field label="First Name">
+                      <b-input v-model="userObjData.firstName" placeholder="Enter First Name"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Middle Name">
+                      <b-input v-model="userObjData.middleName" placeholder="Enter Middle Name"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Last Name">
+                      <b-input v-model="userObjData.lastName" placeholder="Enter Last Name"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Father's Name">
+                      <b-input v-model="userObjData.fatherName" placeholder="Enter Father's Name"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Mother's Name">
+                      <b-input v-model="userObjData.motherName" placeholder="Enter Mother's Name"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Date of Birth">
+                      <b-input v-model="userObjData.dob" placeholder="DD/MM/YYYY"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Gender" expanded>
+                      <b-select v-model="userObjData.gender">
+                        <option value="M">Male</option>
+                        <option value="F">Female</option>
+                      </b-select>
+                    </b-field>
+                  </div>
+                </div>
+                <div class="columns">
+                  <div class="column">
+                    <b-field label="Religion">
+                      <b-select v-model="userObjData.religion">
+                        <option value="">Select Religion Name</option>
+                        <option value="Hinduism">Hinduism / हिन्दू</option>
+                        <option value="Christianity">Christianity / ईसाई</option>
+                        <option value="Islam">Islam / इस्लाम</option>
+                        <option value="Sikhism">Sikhism / सिख</option>
+                        <option value="Buddhism">Buddhism / बुद्ध</option>
+                        <option value="Jainism">Jainism / जैन</option>
+                        <option value="Zoroastrian">Zoroastrian / ज़रथुसट्र पंथी</option>
+                        <option value="Others">Others / अन्य</option>
+                      </b-select>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Category">
+                      <b-select v-model="userObjData.category" placeholder="Select Category Name">
+                        <option value="">Select Category Name</option>
+                        <option value="OBC">OBC</option>
+                        <option value="General">General</option>
+                        <option value="SC">SC</option>
+                        <option value="ST">ST</option>
+                      </b-select>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Nationality">
+                      <b-input v-model="userObjData.nationality" placeholder="Enter Nationality Name"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Country">
+                      <b-input v-model="userObjData.country" placeholder="Enter Country Name"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Body Mark1">
+                      <b-input v-model="userObjData.bodyMark1" placeholder="Enter Body Mark1"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Body Mark2">
+                      <b-input v-model="userObjData.bodyMark2" placeholder="Enter Body Mark2"></b-input>
+                    </b-field>
+                  </div>
+                </div>
+                <div class="columns">
+                  <div class="column">
+                    <b-field label="Marital Status">
+                      <b-select v-model="userObjData.maritalStatus">
+                        <option value="">Select Marital Status</option>
+                        <option value="unmarried">Unmarried</option>
+                        <option value="married">Married</option>
+                        <option value="widow">Widow/Widower</option>
+                        <option value="divorcee">Divorcee</option>
+                      </b-select>
+                    </b-field>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </b-collapse>
+          <!-- Basic Information : END -->
+          <br>
+          <!-- Permanent Address : START -->
+          <b-collapse class="card">
+            <div slot="trigger" slot-scope="props" class="card-header has-background-primary">
+              <p class="card-header-title has-text-white">Permanent Address</p>
+              <a class="card-header-icon has-text-white">
+                <b-icon :icon="props.open ? 'menu-down' : 'menu-up'"></b-icon>
+              </a>
+            </div>
+            <div class="card-content">
+              <div class="content">
+                <div class="columns">
+                  <div class="column">
+                    <b-field label="Address 1 [VILL]">
+                      <b-input v-model="userObjData.addressPermanent.address1" placeholder="Enter Address 1"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Address 2 [POST]">
+                      <b-input v-model="userObjData.addressPermanent.address2" placeholder="Enter Address 2"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Address 3">
+                      <b-input v-model="userObjData.addressPermanent.address3" placeholder="Enter Address 3"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="District/City">
+                      <b-input v-model="userObjData.addressPermanent.city" placeholder="Enter District/City"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="State">
+                      <b-input v-model="userObjData.addressPermanent.state" placeholder="Enter State"></b-input>
+                    </b-field>
+                  </div>
+                </div>
+                <div class="columns">
+                  <div class="column is-2">
+                    <b-field label="PIN Code">
+                      <b-input v-model="userObjData.addressPermanent.pinCode" placeholder="Enter PIN Code"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Mobile Number" expanded>
+                      <b-input v-model="userObjData.addressPermanent.mobile" placeholder="Enter Mobile Number">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Email ID" expanded>
+                      <b-input v-model="userObjData.addressPermanent.email" placeholder="Enter Email ID"></b-input>
+                    </b-field>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </b-collapse>
+          <!-- Permanent Address : END -->
+          <br>
+          <!-- Address for Correspondence : START -->
+          <b-collapse class="card">
+            <div slot="trigger" slot-scope="props" class="card-header has-background-primary">
+              <p class="card-header-title has-text-white">Address for Correspondence</p>
+              <a class="card-header-icon has-text-white">
+                <b-icon :icon="props.open ? 'menu-down' : 'menu-up'"></b-icon>
+              </a>
+            </div>
+            <div class="card-content">
+              <div class="content">
+                <div class="columns">
+                  <div class="column">
+                    <b-field label="Address 1 [VILL]">
+                      <b-input v-model="userObjData.addressCorrespondence.address1" placeholder="Enter Address 1">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Address 2 [POST]">
+                      <b-input v-model="userObjData.addressCorrespondence.address2" placeholder="Enter Address 2">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Address 3">
+                      <b-input v-model="userObjData.addressCorrespondence.address3" placeholder="Enter Address 3">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="District/City">
+                      <b-input v-model="userObjData.addressCorrespondence.city" placeholder="Enter District/City">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="State">
+                      <b-input v-model="userObjData.addressCorrespondence.state" placeholder="Enter State"></b-input>
+                    </b-field>
+                  </div>
+                </div>
+                <div class="columns">
+                  <div class="column is-2">
+                    <b-field label="PIN Code">
+                      <b-input v-model="userObjData.addressCorrespondence.pinCode" placeholder="Enter PIN Code">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Mobile Number" expanded>
+                      <b-input v-model="userObjData.addressCorrespondence.mobile" placeholder="Enter Mobile Number">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Email ID" expanded>
+                      <b-input v-model="userObjData.addressCorrespondence.email" placeholder="Enter Email ID"></b-input>
+                    </b-field>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </b-collapse>
+          <!-- Address for Correspondence : END -->
+          <br>
+          <!-- (High School) Educational Qualification Details : START -->
+          <b-collapse class="card">
+            <div slot="trigger" slot-scope="props" class="card-header has-background-warning">
+              <p class="card-header-title has-text-dark">(High School) Educational Qualification Details</p>
+              <a class="card-header-icon has-text-white">
+                <b-icon :icon="props.open ? 'menu-down' : 'menu-up'"></b-icon>
+              </a>
+            </div>
+            <div class="card-content">
+              <div class="content">
+                <div class="columns">
+                  <div class="column">
+                    <b-field label="(High School) University Name">
+                      <b-input v-model="userObjData.highSchool.university" placeholder="Enter University Name">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="(High School) Passing School Name">
+                      <b-input v-model="userObjData.highSchool.passingSchool" placeholder="Enter Passing School Name">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Certificate No">
+                      <b-input v-model="userObjData.highSchool.certificateNo" placeholder="Enter Certificate No">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Roll No">
+                      <b-input v-model="userObjData.highSchool.rollNo" placeholder="Enter Roll No"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Sr. No">
+                      <b-input v-model="userObjData.highSchool.srNo" placeholder="Enter Sr. No"></b-input>
+                    </b-field>
+                  </div>
+                </div>
+                <div class="columns">
+                  <div class="column is-2">
+                    <b-field label="Passing Year">
+                      <b-input v-model="userObjData.highSchool.passingYear" placeholder="Enter Passing Year"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Max. Marks" expanded>
+                      <b-input v-model="userObjData.highSchool.maxMarks" placeholder="Enter Max. Marks"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Obtained Marks">
+                      <b-input v-model="userObjData.highSchool.obtainedMarks" placeholder="Enter Obtained Marks">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Overall (in%)">
+                      <b-input v-model="userObjData.highSchool.percentage" placeholder="Enter Overall (in%)"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Principal Subjects">
+                      <b-input v-model="userObjData.highSchool.subjects" placeholder="Enter Principal Subjects">
+                      </b-input>
+                    </b-field>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </b-collapse>
+          <!-- (High School) Educational Qualification Details : END -->
+          <br>
+          <!-- (Intermediate) Educational Qualification Details : START -->
+          <b-collapse class="card">
+            <div slot="trigger" slot-scope="props" class="card-header has-background-warning">
+              <p class="card-header-title has-text-dark">(Intermediate) Educational Qualification Details</p>
+              <a class="card-header-icon has-text-white">
+                <b-icon :icon="props.open ? 'menu-down' : 'menu-up'"></b-icon>
+              </a>
+            </div>
+            <div class="card-content">
+              <div class="content">
+                <div class="columns">
+                  <div class="column">
+                    <b-field label="(Intermediate) University Name">
+                      <b-input v-model="userObjData.intermediate.university" placeholder="Enter University Name">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="(Intermediate) Passing School Name">
+                      <b-input v-model="userObjData.intermediate.passingSchool" placeholder="Enter Passing School Name">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Certificate No">
+                      <b-input v-model="userObjData.intermediate.certificateNo" placeholder="Enter Certificate No">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Roll No">
+                      <b-input v-model="userObjData.intermediate.rollNo" placeholder="Enter Roll No"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Sr. No">
+                      <b-input v-model="userObjData.intermediate.srNo" placeholder="Enter Sr. No"></b-input>
+                    </b-field>
+                  </div>
+                </div>
+                <div class="columns">
+                  <div class="column is-2">
+                    <b-field label="Passing Year">
+                      <b-input v-model="userObjData.intermediate.passingYear" placeholder="Enter Passing Year">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Max. Marks" expanded>
+                      <b-input v-model="userObjData.intermediate.maxMarks" placeholder="Enter Max. Marks"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Obtained Marks">
+                      <b-input v-model="userObjData.intermediate.obtainedMarks" placeholder="Enter Obtained Marks">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Overall (in%)">
+                      <b-input v-model="userObjData.intermediate.percentage" placeholder="Enter Overall (in%)">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Principal Subjects">
+                      <b-input v-model="userObjData.intermediate.subjects" placeholder="Enter Principal Subjects">
+                      </b-input>
+                    </b-field>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </b-collapse>
+          <!-- (Intermediate) Educational Qualification Details : END -->
+          <br>
+          <!-- Other Educational Qualification Details : START -->
+          <b-collapse class="card">
+            <div slot="trigger" slot-scope="props" class="card-header has-background-grey">
+              <p class="card-header-title has-text-white">Other Educational Qualification Details</p>
+              <a class="card-header-icon has-text-white">
+                <b-icon :icon="props.open ? 'menu-down' : 'menu-up'"></b-icon>
+              </a>
+            </div>
+            <div class="card-content">
+              <!-- First Degree : START -->
+              <div class="content">
+                <p class="has-text-centered is-uppercase has-text-weight-bold has-background-light"
+                  style="padding: 5px 0px 5px; margin-bottom: 25px;">
+                  First Degree: <code>degree1</code>
+                </p>
+                <div class="columns">
+                  <div class="column">
+                    <b-field label="Name of the Degree/Diploma">
+                      <b-input v-model="userObjData.otherEdu.degree1.name" placeholder="Name of the Degree/Diploma">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Specialization & Principal Subjects">
+                      <b-input v-model="userObjData.otherEdu.degree1.subjects"
+                        placeholder="Specialization & Principal Subjects"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Name of University/Institute">
+                      <b-input v-model="userObjData.otherEdu.degree1.university"
+                        placeholder="Name of University/Institute"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Mode Of Course" message="Mode Of Course: [Correspondence, Full Time]">
+                      <b-input v-model="userObjData.otherEdu.degree1.modeOfCourse" placeholder="Mode Of Course">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Certificate No">
+                      <b-input v-model="userObjData.otherEdu.degree1.certificateNo" placeholder="Enter Certificate No">
+                      </b-input>
+                    </b-field>
+                  </div>
+                </div>
+                <div class="columns">
+                  <div class="column is-2">
+                    <b-field label="Roll No">
+                      <b-input v-model="userObjData.otherEdu.degree1.rollNo" placeholder="Enter Roll No"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Sr. No">
+                      <b-input v-model="userObjData.otherEdu.degree1.srNo" placeholder="Enter Sr. No"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Passing Year">
+                      <b-input v-model="userObjData.otherEdu.degree1.passingYear" placeholder="Enter Passing Year">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Max. Marks" expanded>
+                      <b-input v-model="userObjData.otherEdu.degree1.maxMarks" placeholder="Enter Max. Marks"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Obtained Marks">
+                      <b-input v-model="userObjData.otherEdu.degree1.obtainedMarks" placeholder="Enter Obtained Marks">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Overall (in%)">
+                      <b-input v-model="userObjData.otherEdu.degree1.percentage" placeholder="Enter Overall (in%)">
+                      </b-input>
+                    </b-field>
+                  </div>
+                </div>
+              </div>
+              <!-- First Degree : END -->
+
+              <!-- Second Degree : START -->
+              <div class="content">
+                <p class="has-text-centered is-uppercase has-text-weight-bold has-background-light"
+                  style="padding: 5px 0px 5px; margin-bottom: 25px;">
+                  Second Degree: <code>degree2</code>
+                </p>
+                <div class="columns">
+                  <div class="column">
+                    <b-field label="Name of the Degree/Diploma">
+                      <b-input v-model="userObjData.otherEdu.degree2.name" placeholder="Name of the Degree/Diploma">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Specialization & Principal Subjects">
+                      <b-input v-model="userObjData.otherEdu.degree2.subjects"
+                        placeholder="Specialization & Principal Subjects"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Name of University/Institute">
+                      <b-input v-model="userObjData.otherEdu.degree2.university"
+                        placeholder="Name of University/Institute"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Mode Of Course" message="Mode Of Course: [Correspondence, Full Time]">
+                      <b-input v-model="userObjData.otherEdu.degree2.modeOfCourse" placeholder="Mode Of Course">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Certificate No">
+                      <b-input v-model="userObjData.otherEdu.degree2.certificateNo" placeholder="Enter Certificate No">
+                      </b-input>
+                    </b-field>
+                  </div>
+                </div>
+                <div class="columns">
+                  <div class="column is-2">
+                    <b-field label="Roll No">
+                      <b-input v-model="userObjData.otherEdu.degree2.rollNo" placeholder="Enter Roll No"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Sr. No">
+                      <b-input v-model="userObjData.otherEdu.degree2.srNo" placeholder="Enter Sr. No"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Passing Year">
+                      <b-input v-model="userObjData.otherEdu.degree2.passingYear" placeholder="Enter Passing Year">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Max. Marks" expanded>
+                      <b-input v-model="userObjData.otherEdu.degree2.maxMarks" placeholder="Enter Max. Marks"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Obtained Marks">
+                      <b-input v-model="userObjData.otherEdu.degree2.obtainedMarks" placeholder="Enter Obtained Marks">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Overall (in%)">
+                      <b-input v-model="userObjData.otherEdu.degree2.percentage" placeholder="Enter Overall (in%)">
+                      </b-input>
+                    </b-field>
+                  </div>
+                </div>
+              </div>
+              <!-- Second Degree : END -->
+
+              <!-- Third Degree : START -->
+              <div class="content">
+                <p class="has-text-centered is-uppercase has-text-weight-bold has-background-light"
+                  style="padding: 5px 0px 5px; margin-bottom: 25px;">
+                  Third Degree: <code>degree3</code>
+                </p>
+                <div class="columns">
+                  <div class="column">
+                    <b-field label="Name of the Degree/Diploma">
+                      <b-input v-model="userObjData.otherEdu.degree3.name" placeholder="Name of the Degree/Diploma">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Specialization & Principal Subjects">
+                      <b-input v-model="userObjData.otherEdu.degree3.subjects"
+                        placeholder="Specialization & Principal Subjects"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Name of University/Institute">
+                      <b-input v-model="userObjData.otherEdu.degree3.university"
+                        placeholder="Name of University/Institute"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Mode Of Course" message="Mode Of Course: [Correspondence, Full Time]">
+                      <b-input v-model="userObjData.otherEdu.degree3.modeOfCourse" placeholder="Mode Of Course">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Certificate No">
+                      <b-input v-model="userObjData.otherEdu.degree3.certificateNo" placeholder="Enter Certificate No">
+                      </b-input>
+                    </b-field>
+                  </div>
+                </div>
+                <div class="columns">
+                  <div class="column is-2">
+                    <b-field label="Roll No">
+                      <b-input v-model="userObjData.otherEdu.degree3.rollNo" placeholder="Enter Roll No"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Sr. No">
+                      <b-input v-model="userObjData.otherEdu.degree3.srNo" placeholder="Enter Sr. No"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Passing Year">
+                      <b-input v-model="userObjData.otherEdu.degree3.passingYear" placeholder="Enter Passing Year">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Max. Marks" expanded>
+                      <b-input v-model="userObjData.otherEdu.degree3.maxMarks" placeholder="Enter Max. Marks"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Obtained Marks">
+                      <b-input v-model="userObjData.otherEdu.degree3.obtainedMarks" placeholder="Enter Obtained Marks">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Overall (in%)">
+                      <b-input v-model="userObjData.otherEdu.degree3.percentage" placeholder="Enter Overall (in%)">
+                      </b-input>
+                    </b-field>
+                  </div>
+                </div>
+              </div>
+              <!-- Third Degree : END -->
+
+              <!-- Fourth Degree : START -->
+              <div class="content">
+                <p class="has-text-centered is-uppercase has-text-weight-bold has-background-light"
+                  style="padding: 5px 0px 5px; margin-bottom: 25px;">
+                  Fourth Degree: <code>degree4</code>
+                </p>
+                <div class="columns">
+                  <div class="column">
+                    <b-field label="Name of the Degree/Diploma">
+                      <b-input v-model="userObjData.otherEdu.degree4.name" placeholder="Name of the Degree/Diploma">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Specialization & Principal Subjects">
+                      <b-input v-model="userObjData.otherEdu.degree4.subjects"
+                        placeholder="Specialization & Principal Subjects"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Name of University/Institute">
+                      <b-input v-model="userObjData.otherEdu.degree4.university"
+                        placeholder="Name of University/Institute"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Mode Of Course" message="Mode Of Course: [Correspondence, Full Time]">
+                      <b-input v-model="userObjData.otherEdu.degree4.modeOfCourse" placeholder="Mode Of Course">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Certificate No">
+                      <b-input v-model="userObjData.otherEdu.degree4.certificateNo" placeholder="Enter Certificate No">
+                      </b-input>
+                    </b-field>
+                  </div>
+                </div>
+                <div class="columns">
+                  <div class="column is-2">
+                    <b-field label="Roll No">
+                      <b-input v-model="userObjData.otherEdu.degree4.rollNo" placeholder="Enter Roll No"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Sr. No">
+                      <b-input v-model="userObjData.otherEdu.degree4.srNo" placeholder="Enter Sr. No"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Passing Year">
+                      <b-input v-model="userObjData.otherEdu.degree4.passingYear" placeholder="Enter Passing Year">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Max. Marks" expanded>
+                      <b-input v-model="userObjData.otherEdu.degree4.maxMarks" placeholder="Enter Max. Marks"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Obtained Marks">
+                      <b-input v-model="userObjData.otherEdu.degree4.obtainedMarks" placeholder="Enter Obtained Marks">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Overall (in%)">
+                      <b-input v-model="userObjData.otherEdu.degree4.percentage" placeholder="Enter Overall (in%)">
+                      </b-input>
+                    </b-field>
+                  </div>
+                </div>
+              </div>
+              <!-- Fourth Degree : END -->
+
+              <!-- Fifth Degree : START -->
+              <div class="content">
+                <p class="has-text-centered is-uppercase has-text-weight-bold has-background-light"
+                  style="padding: 5px 0px 5px; margin-bottom: 25px;">
+                  Fifth Degree: <code>degree5</code>
+                </p>
+                <div class="columns">
+                  <div class="column">
+                    <b-field label="Name of the Degree/Diploma">
+                      <b-input v-model="userObjData.otherEdu.degree5.name" placeholder="Name of the Degree/Diploma">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Specialization & Principal Subjects">
+                      <b-input v-model="userObjData.otherEdu.degree5.subjects"
+                        placeholder="Specialization & Principal Subjects"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Name of University/Institute">
+                      <b-input v-model="userObjData.otherEdu.degree5.university"
+                        placeholder="Name of University/Institute"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Mode Of Course" message="Mode Of Course: [Correspondence, Full Time]">
+                      <b-input v-model="userObjData.otherEdu.degree5.modeOfCourse" placeholder="Mode Of Course">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Certificate No">
+                      <b-input v-model="userObjData.otherEdu.degree5.certificateNo" placeholder="Enter Certificate No">
+                      </b-input>
+                    </b-field>
+                  </div>
+                </div>
+                <div class="columns">
+                  <div class="column is-2">
+                    <b-field label="Roll No">
+                      <b-input v-model="userObjData.otherEdu.degree5.rollNo" placeholder="Enter Roll No"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Sr. No">
+                      <b-input v-model="userObjData.otherEdu.degree5.srNo" placeholder="Enter Sr. No"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Passing Year">
+                      <b-input v-model="userObjData.otherEdu.degree5.passingYear" placeholder="Enter Passing Year">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Max. Marks" expanded>
+                      <b-input v-model="userObjData.otherEdu.degree5.maxMarks" placeholder="Enter Max. Marks"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Obtained Marks">
+                      <b-input v-model="userObjData.otherEdu.degree5.obtainedMarks" placeholder="Enter Obtained Marks">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Overall (in%)">
+                      <b-input v-model="userObjData.otherEdu.degree5.percentage" placeholder="Enter Overall (in%)">
+                      </b-input>
+                    </b-field>
+                  </div>
+                </div>
+              </div>
+              <!-- Fifth Degree : END -->
+            </div>
+          </b-collapse>
+          <!-- Other Educational Qualification Details : END -->
+          <br>
+          <!-- Educational Certificate Details : START -->
+          <b-collapse class="card">
+            <div slot="trigger" slot-scope="props" class="card-header has-background-danger">
+              <p class="card-header-title has-text-white">Educational Certificate</p>
+              <a class="card-header-icon has-text-white">
+                <b-icon :icon="props.open ? 'menu-down' : 'menu-up'"></b-icon>
+              </a>
+            </div>
+            <div class="card-content">
+              <div class="content">
+                <!-- Certificate: 1 -->
+                <div class="columns">
+                  <div class="column is-1">
+                    <b-field label="Key">
+                      <b-input value="certificate1" disabled></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Certificate Name">
+                      <b-input v-model="userObjData.certificate.certificate1.name" placeholder="Enter Certificate Name">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Serial No">
+                      <b-input v-model="userObjData.certificate.certificate1.serialNo" placeholder="Enter Serial No">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Registration No">
+                      <b-input v-model="userObjData.certificate.certificate1.regNo" placeholder="Registration No">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Roll No">
+                      <b-input v-model="userObjData.certificate.certificate1.rollNo" placeholder="Enter Roll No">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Grade">
+                      <b-input v-model="userObjData.certificate.certificate1.grade" placeholder="Enter Grade"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Percentage">
+                      <b-input v-model="userObjData.certificate.certificate1.percentage" placeholder="Enter Percentage">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Issues Date">
+                      <b-input v-model="userObjData.certificate.certificate1.issuesDate"
+                        placeholder="Enter Certificate Issues Date"></b-input>
+                    </b-field>
+                  </div>
+                </div>
+                <!-- Certificate: 2 -->
+                <div class="columns">
+                  <div class="column is-1">
+                    <b-field label="Key">
+                      <b-input value="certificate2" disabled></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Certificate Name">
+                      <b-input v-model="userObjData.certificate.certificate2.name" placeholder="Enter Certificate Name">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Serial No">
+                      <b-input v-model="userObjData.certificate.certificate2.serialNo" placeholder="Enter Serial No">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Registration No">
+                      <b-input v-model="userObjData.certificate.certificate2.regNo" placeholder="Registration No">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Roll No">
+                      <b-input v-model="userObjData.certificate.certificate2.rollNo" placeholder="Enter Roll No">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Grade">
+                      <b-input v-model="userObjData.certificate.certificate2.grade" placeholder="Enter Grade"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Percentage">
+                      <b-input v-model="userObjData.certificate.certificate2.percentage" placeholder="Enter Percentage">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Issues Date">
+                      <b-input v-model="userObjData.certificate.certificate2.issuesDate"
+                        placeholder="Enter Certificate Issues Date"></b-input>
+                    </b-field>
+                  </div>
+                </div>
+                <!-- Certificate: 3 -->
+                <div class="columns">
+                  <div class="column is-1">
+                    <b-field label="Key">
+                      <b-input value="certificate3" disabled></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Certificate Name">
+                      <b-input v-model="userObjData.certificate.certificate3.name" placeholder="Enter Certificate Name">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Serial No">
+                      <b-input v-model="userObjData.certificate.certificate3.serialNo" placeholder="Enter Serial No">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Registration No">
+                      <b-input v-model="userObjData.certificate.certificate3.regNo" placeholder="Registration No">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Roll No">
+                      <b-input v-model="userObjData.certificate.certificate3.rollNo" placeholder="Enter Roll No">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Grade">
+                      <b-input v-model="userObjData.certificate.certificate3.grade" placeholder="Enter Grade"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Percentage">
+                      <b-input v-model="userObjData.certificate.certificate3.percentage" placeholder="Enter Percentage">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Issues Date">
+                      <b-input v-model="userObjData.certificate.certificate3.issuesDate"
+                        placeholder="Enter Certificate Issues Date"></b-input>
+                    </b-field>
+                  </div>
+                </div>
+                <!-- Certificate: 4 -->
+                <div class="columns">
+                  <div class="column is-1">
+                    <b-field label="Key">
+                      <b-input value="certificate4" disabled></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Certificate Name">
+                      <b-input v-model="userObjData.certificate.certificate4.name" placeholder="Enter Certificate Name">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Serial No">
+                      <b-input v-model="userObjData.certificate.certificate4.serialNo" placeholder="Enter Serial No">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Registration No">
+                      <b-input v-model="userObjData.certificate.certificate4.regNo" placeholder="Registration No">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Roll No">
+                      <b-input v-model="userObjData.certificate.certificate4.rollNo" placeholder="Enter Roll No">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Grade">
+                      <b-input v-model="userObjData.certificate.certificate4.grade" placeholder="Enter Grade"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Percentage">
+                      <b-input v-model="userObjData.certificate.certificate4.percentage" placeholder="Enter Percentage">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Issues Date">
+                      <b-input v-model="userObjData.certificate.certificate4.issuesDate"
+                        placeholder="Enter Certificate Issues Date"></b-input>
+                    </b-field>
+                  </div>
+                </div>
+                <!-- Certificate: 5 -->
+                <div class="columns">
+                  <div class="column is-1">
+                    <b-field label="Key">
+                      <b-input value="certificate5" disabled></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Certificate Name">
+                      <b-input v-model="userObjData.certificate.certificate5.name" placeholder="Enter Certificate Name">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Serial No">
+                      <b-input v-model="userObjData.certificate.certificate5.serialNo" placeholder="Enter Serial No">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Registration No">
+                      <b-input v-model="userObjData.certificate.certificate5.regNo" placeholder="Registration No">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Roll No">
+                      <b-input v-model="userObjData.certificate.certificate5.rollNo" placeholder="Enter Roll No">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Grade">
+                      <b-input v-model="userObjData.certificate.certificate5.grade" placeholder="Enter Grade"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Percentage">
+                      <b-input v-model="userObjData.certificate.certificate5.percentage" placeholder="Enter Percentage">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Issues Date">
+                      <b-input v-model="userObjData.certificate.certificate5.issuesDate"
+                        placeholder="Enter Certificate Issues Date"></b-input>
+                    </b-field>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </b-collapse>
+          <!-- Educational Certificate Details : END -->
+          <br>
+          <!-- Work Experience Details : START -->
+          <b-collapse class="card">
+            <div slot="trigger" slot-scope="props" class="card-header has-background-info">
+              <p class="card-header-title has-text-white">Work Experience</p>
+              <a class="card-header-icon has-text-white">
+                <b-icon :icon="props.open ? 'menu-down' : 'menu-up'"></b-icon>
+              </a>
+            </div>
+            <div class="card-content">
+              <div class="content">
+                <p class="has-text-centered is-uppercase has-text-weight-bold has-background-light"
+                  style="padding: 5px 0px 5px; margin-bottom: 25px;">
+                  First Work Experience: <code>work.exp1</code>
+                </p>
+                <div class="columns">
+                  <div class="column is-2">
+                    <b-field label="Area of Work">
+                      <b-input v-model="userObjData.workExp.exp1.area" placeholder="Area of Work"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Organization Nature">
+                      <b-input v-model="userObjData.workExp.exp1.orgType" placeholder="Organization Nature"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Organization Name">
+                      <b-input v-model="userObjData.workExp.exp1.orgName" placeholder="Enter Organization Name">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Post Held">
+                      <b-input v-model="userObjData.workExp.exp1.post" placeholder="Post Held"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Job Responsibilities">
+                      <b-input v-model="userObjData.workExp.exp1.resp" placeholder="Enter Job Responsibilities">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Date of Joining">
+                      <b-input v-model="userObjData.workExp.exp1.joinDate" placeholder="Date of Joining"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Date of Leaving">
+                      <b-input v-model="userObjData.workExp.exp1.leaveDate" placeholder="Date of Leaving"></b-input>
+                    </b-field>
+                  </div>
+                </div>
+                <p class="has-text-centered is-uppercase has-text-weight-bold has-background-light"
+                  style="padding: 5px 0px 5px; margin-bottom: 25px;">
+                  Second Work Experience: <code>work.exp2</code>
+                </p>
+                <div class="columns">
+                  <div class="column is-2">
+                    <b-field label="Area of Work">
+                      <b-input v-model="userObjData.workExp.exp2.area" placeholder="Area of Work"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Organization Nature">
+                      <b-input v-model="userObjData.workExp.exp2.orgType" placeholder="Organization Nature"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Organization Name">
+                      <b-input v-model="userObjData.workExp.exp2.orgName" placeholder="Enter Organization Name">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Post Held">
+                      <b-input v-model="userObjData.workExp.exp2.post" placeholder="Post Held"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Job Responsibilities">
+                      <b-input v-model="userObjData.workExp.exp2.resp" placeholder="Enter Job Responsibilities">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Date of Joining">
+                      <b-input v-model="userObjData.workExp.exp2.joinDate" placeholder="Date of Joining"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Date of Leaving">
+                      <b-input v-model="userObjData.workExp.exp2.leaveDate" placeholder="Date of Leaving"></b-input>
+                    </b-field>
+                  </div>
+                </div>
+                <p class="has-text-centered is-uppercase has-text-weight-bold has-background-light"
+                  style="padding: 5px 0px 5px; margin-bottom: 25px;">
+                  Third Work Experience: <code>work.exp3</code>
+                </p>
+                <div class="columns">
+                  <div class="column is-2">
+                    <b-field label="Area of Work">
+                      <b-input v-model="userObjData.workExp.exp3.area" placeholder="Area of Work"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Organization Nature">
+                      <b-input v-model="userObjData.workExp.exp3.orgType" placeholder="Organization Nature"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Organization Name">
+                      <b-input v-model="userObjData.workExp.exp3.orgName" placeholder="Enter Organization Name">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Post Held">
+                      <b-input v-model="userObjData.workExp.exp3.post" placeholder="Post Held"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Job Responsibilities">
+                      <b-input v-model="userObjData.workExp.exp3.resp" placeholder="Enter Job Responsibilities">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Date of Joining">
+                      <b-input v-model="userObjData.workExp.exp3.joinDate" placeholder="Date of Joining"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Date of Leaving">
+                      <b-input v-model="userObjData.workExp.exp3.leaveDate" placeholder="Date of Leaving"></b-input>
+                    </b-field>
+                  </div>
+                </div>
+                <p class="has-text-centered is-uppercase has-text-weight-bold has-background-light"
+                  style="padding: 5px 0px 5px; margin-bottom: 25px;">
+                  Fourth Work Experience: <code>work.exp4</code>
+                </p>
+                <div class="columns">
+                  <div class="column is-2">
+                    <b-field label="Area of Work">
+                      <b-input v-model="userObjData.workExp.exp4.area" placeholder="Area of Work"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Organization Nature">
+                      <b-input v-model="userObjData.workExp.exp4.orgType" placeholder="Organization Nature"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Organization Name">
+                      <b-input v-model="userObjData.workExp.exp4.orgName" placeholder="Enter Organization Name">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Post Held">
+                      <b-input v-model="userObjData.workExp.exp4.post" placeholder="Post Held"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Job Responsibilities">
+                      <b-input v-model="userObjData.workExp.exp4.resp" placeholder="Enter Job Responsibilities">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Date of Joining">
+                      <b-input v-model="userObjData.workExp.exp4.joinDate" placeholder="Date of Joining"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Date of Leaving">
+                      <b-input v-model="userObjData.workExp.exp4.leaveDate" placeholder="Date of Leaving"></b-input>
+                    </b-field>
+                  </div>
+                </div>
+                <p class="has-text-centered is-uppercase has-text-weight-bold has-background-light"
+                  style="padding: 5px 0px 5px; margin-bottom: 25px;">
+                  Fifth Work Experience: <code>work.exp5</code>
+                </p>
+                <div class="columns">
+                  <div class="column is-2">
+                    <b-field label="Area of Work">
+                      <b-input v-model="userObjData.workExp.exp5.area" placeholder="Area of Work"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Organization Nature">
+                      <b-input v-model="userObjData.workExp.exp5.orgType" placeholder="Organization Nature"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Organization Name">
+                      <b-input v-model="userObjData.workExp.exp5.orgName" placeholder="Enter Organization Name">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Post Held">
+                      <b-input v-model="userObjData.workExp.exp5.post" placeholder="Post Held"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Job Responsibilities">
+                      <b-input v-model="userObjData.workExp.exp5.resp" placeholder="Enter Job Responsibilities">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Date of Joining">
+                      <b-input v-model="userObjData.workExp.exp5.joinDate" placeholder="Date of Joining"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Date of Leaving">
+                      <b-input v-model="userObjData.workExp.exp5.leaveDate" placeholder="Date of Leaving"></b-input>
+                    </b-field>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </b-collapse>
+          <!-- Work Experience Details : END -->
+          <br>
+          <!-- Other Identification : START -->
+          <b-collapse class="card">
+            <div slot="trigger" slot-scope="props" class="card-header has-background-primary">
+              <p class="card-header-title has-text-white">Other Identification</p>
+              <a class="card-header-icon has-text-white">
+                <b-icon :icon="props.open ? 'menu-down' : 'menu-up'"></b-icon>
+              </a>
+            </div>
+            <div class="card-content">
+              <div class="content">
+                <div class="columns">
+                  <!-- Aadhaar Card -->
+                  <div class="column">
+                    <b-field label="Identity Name">
+                      <b-input value="Aadhaar Card" placeholder="Enter Identity Name" disabled></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Aadhaar Number">
+                      <b-input v-model="userObjData.identity.aadhaar" placeholder="Enter Aadhaar Number"></b-input>
+                    </b-field>
+                  </div>
+                  <!-- Pan Card -->
+                  <div class="column">
+                    <b-field label="Identity Name">
+                      <b-input value="Pan Card" placeholder="Enter Identity Name" disabled></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="PAN Number" expanded>
+                      <b-input v-model="userObjData.identity.pan" placeholder="Enter PAN Number"></b-input>
+                    </b-field>
+                  </div>
+                  <!-- Voter Card -->
+                  <div class="column">
+                    <b-field label="Identity Name">
+                      <b-input value="Voter Card" placeholder="Enter Identity Name" disabled></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Voter Card" expanded>
+                      <b-input v-model="userObjData.identity.voter" placeholder="Enter Voter Card Number"></b-input>
+                    </b-field>
+                  </div>
+                </div>
+                <!-- Caste Identity -->
+                <div class="columns">
+                  <div class="column is-2">
+                    <b-field label="Identity Name">
+                      <b-input value="Caste Identity" placeholder="Enter Identity Name" disabled></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Caste Identity Serial No">
+                      <b-input v-model="userObjData.identity.caste.serialNo"
+                        placeholder="Enter Caste Identity Serial No"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Caste Identity Issues Date">
+                      <b-input v-model="userObjData.identity.caste.issuesDate"
+                        placeholder="Enter Caste Identity Issues Date"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Caste Identity Issues By">
+                      <b-input v-model="userObjData.identity.caste.issuesBy"
+                        placeholder="Enter Caste Identity Issues By"></b-input>
+                    </b-field>
+                  </div>
+                </div>
+                <!-- Residential Identity -->
+                <div class="columns">
+                  <div class="column is-2">
+                    <b-field label="Identity Name">
+                      <b-input value="Residential Identity" placeholder="Enter Identity Name" disabled></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Residential Identity Serial No">
+                      <b-input v-model="userObjData.identity.residential.serialNo"
+                        placeholder="Enter Residential Identity Serial No"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Residential Identity Issues Date">
+                      <b-input v-model="userObjData.identity.residential.issuesDate"
+                        placeholder="Enter Residential Identity Issues Date"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Residential Identity Issues By">
+                      <b-input v-model="userObjData.identity.residential.issuesBy"
+                        placeholder="Enter Residential Identity Issues By"></b-input>
+                    </b-field>
+                  </div>
+                </div>
+                <!-- Income Certificate -->
+                <div class="columns">
+                  <div class="column is-2">
+                    <b-field label="Identity Name">
+                      <b-input value="Income Certificate" placeholder="Enter Certificate Name" disabled></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Income Certificate Serial No">
+                      <b-input v-model="userObjData.identity.income.serialNo"
+                        placeholder="Enter Income Certificate Serial No"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Income Certificate Issues Date">
+                      <b-input v-model="userObjData.identity.income.issuesDate"
+                        placeholder="Enter Income Certificate Issues Date"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Income Certificate Issues By">
+                      <b-input v-model="userObjData.identity.income.issuesBy"
+                        placeholder="Enter Income Certificate Issues By"></b-input>
+                    </b-field>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </b-collapse>
+          <!-- Other Identification : END -->
+          <br>
+          <!-- JOB Details : START -->
+          <b-collapse class="card">
+            <div slot="trigger" slot-scope="props" class="card-header has-background-danger">
+              <p class="card-header-title has-text-white">JOB Details</p>
+              <a class="card-header-icon has-text-white">
+                <b-icon :icon="props.open ? 'menu-down' : 'menu-up'"></b-icon>
+              </a>
+            </div>
+            <div class="card-content">
+              <div class="content">
+                <div class="columns">
+                  <div class="column">
+                    <b-field label="Position Name">
+                      <b-input v-model="userObjData.address2" placeholder="Enter Position Name"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="District">
+                      <b-input v-model="userObjData.address2" placeholder="Enter District Name"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Programme">
+                      <b-input v-model="userObjData.address3" placeholder="Enter Programme"></b-input>
+                    </b-field>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </b-collapse>
+          <!-- JOB Details : END -->
+          <br>
+          <!-- Bank Account Details : START -->
+          <b-collapse class="card">
+            <div slot="trigger" slot-scope="props" class="card-header has-background-info">
+              <p class="card-header-title has-text-white">Bank Account Details</p>
+              <a class="card-header-icon has-text-white">
+                <b-icon :icon="props.open ? 'menu-down' : 'menu-up'"></b-icon>
+              </a>
+            </div>
+            <div class="card-content">
+              <div class="content">
+                <p class="has-text-centered is-uppercase has-text-weight-bold has-background-light"
+                  style="padding: 5px 0px 5px; margin-bottom: 25px;">
+                  First Bank Details: <code>bank1</code>
+                </p>
+                <div class="columns">
+                  <div class="column is-2">
+                    <b-field label="Bank Name">
+                      <b-input v-model="userObjData.bank1.name" placeholder="Bank Name"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Account No">
+                      <b-input v-model="userObjData.bank1.account" placeholder="Account No"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Branch Name">
+                      <b-input v-model="userObjData.bank1.branch" placeholder="Branch Name">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="IFSC Code">
+                      <b-input v-model="userObjData.bank1.ifsc" placeholder="IFSC Code"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Customer Name">
+                      <b-input v-model="userObjData.bank1.customerName" placeholder="Enter Customer Name">
+                      </b-input>
+                    </b-field>
+                  </div>
+                </div>
+                <p class="has-text-centered is-uppercase has-text-weight-bold has-background-light"
+                  style="padding: 5px 0px 5px; margin-bottom: 25px;">
+                  Second Bank Details: <code>bank2</code>
+                </p>
+                <div class="columns">
+                  <div class="column is-2">
+                    <b-field label="Bank Name">
+                      <b-input v-model="userObjData.bank2.name" placeholder="Bank Name"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Account No">
+                      <b-input v-model="userObjData.bank2.account" placeholder="Account No"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Branch Name">
+                      <b-input v-model="userObjData.bank2.branch" placeholder="Branch Name">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="IFSC Code">
+                      <b-input v-model="userObjData.bank2.ifsc" placeholder="IFSC Code"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Customer Name">
+                      <b-input v-model="userObjData.bank2.customerName" placeholder="Enter Customer Name">
+                      </b-input>
+                    </b-field>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </b-collapse>
+          <!-- Bank Account Details : END -->
+          <br>
+          <!-- ATM Details : START -->
+          <b-collapse class="card">
+            <div slot="trigger" slot-scope="props" class="card-header has-background-primary">
+              <p class="card-header-title has-text-white">ATM Details</p>
+              <a class="card-header-icon has-text-white">
+                <b-icon :icon="props.open ? 'menu-down' : 'menu-up'"></b-icon>
+              </a>
+            </div>
+            <div class="card-content">
+              <div class="content">
+                <p class="has-text-centered is-uppercase has-text-weight-bold has-background-light"
+                  style="padding: 5px 0px 5px; margin-bottom: 25px;">
+                  First ATM Details: <code>atm1</code>
+                </p>
+                <div class="columns">
+                  <div class="column is-2">
+                    <b-field label="Bank Name">
+                      <b-input v-model="userObjData.atm1.bankName" placeholder="Bank Name"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="ATM No">
+                      <b-input v-model="userObjData.atm1.atmNo" placeholder="ATM No"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Expire Date">
+                      <b-input v-model="userObjData.atm1.expireDate" placeholder="Expire Date"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="ATM Back Side Three Digit Code">
+                      <b-input v-model="userObjData.atm1.code" placeholder="ATM Back Side Three Digit Code">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Customer Name">
+                      <b-input v-model="userObjData.atm1.customerName" placeholder="Customer Name"></b-input>
+                    </b-field>
+                  </div>
+                </div>
+                <p class="has-text-centered is-uppercase has-text-weight-bold has-background-light"
+                  style="padding: 5px 0px 5px; margin-bottom: 25px;">
+                  Second Bank Details: <code>atm2</code>
+                </p>
+                <div class="columns">
+                  <div class="column is-2">
+                    <b-field label="Bank Name">
+                      <b-input v-model="userObjData.atm2.bankName" placeholder="Bank Name"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="ATM No">
+                      <b-input v-model="userObjData.atm2.atmNo" placeholder="ATM No"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column is-2">
+                    <b-field label="Expire Date">
+                      <b-input v-model="userObjData.atm2.expireDate" placeholder="Expire Date"></b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="ATM Back Side Three Digit Code">
+                      <b-input v-model="userObjData.atm2.code" placeholder="ATM Back Side Three Digit Code">
+                      </b-input>
+                    </b-field>
+                  </div>
+                  <div class="column">
+                    <b-field label="Customer Name">
+                      <b-input v-model="userObjData.atm2.customerName" placeholder="Customer Name"></b-input>
+                    </b-field>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </b-collapse>
+          <!-- ATM Details : END -->
+          <br>
+          <div class="field is-grouped is-grouped-centered">
+            <p class="control">
+              <button class="button is-success" @click="saveUserInfoData()">
+                <b-icon icon="check"></b-icon>
+                <span>Save Information</span>
+              </button>
+            </p>
+            <p class="control">
+              <a @click="clearAddUserFormData" class="button is-danger">
+                <b-icon icon="delete-forever"></b-icon>
+                <span>Clear Form Data</span>
+              </a>
+            </p>
+          </div>
+        </b-tab-item>
+        <br>
+        <!-- Add New User :: END -->
+      </b-tabs>
+    </section>
+    <b-modal :active.sync="isImportModalActive" :width="640" scroll="keep">
+      <div class="card">
+        <div class="card-content">
+          <div class="content has-text-centered">
+            <b-field>
+              <b-upload v-model="uploadUserJsonFiles" multiple drag-drop>
+                <section class="section">
+                  <div class="content has-text-centered">
+                    <p>
+                      <b-icon icon="upload" size="is-large">
+                      </b-icon>
+                    </p>
+                    <p>Drop your json file or click to import</p>
+                  </div>
+                </section>
+              </b-upload>
+            </b-field>
+            <div class="tags">
+              <span v-for="(file, index) in uploadUserJsonFiles" :key="index" class="tag is-primary">
+                {{file.name}}
+                <button class="delete is-small" type="button" @click="deleteDropFile(index)">
+                </button>
+              </span>
+            </div>
+            <button class="button is-info" @click="importUserData()">
+              <b-icon icon="upload"></b-icon>
+              <span>Import User Data</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </b-modal>
+  </div>
+
+  <!-- <script src="plugins/jsoneditor/jsoneditor.min.js"></script> -->
+  <!-- <script src="plugins/json-editor/jsoneditor.min.js"></script> -->
+  <script src="js/vue.min.js"></script>
+  <script src="js/buefy.min.js"></script>
+  <script src="js/options.min.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,6 @@
+/version/*
+demo.html
+asstes/FindReplace.ahk
+js/script/
+_setup/node_modules/*
+node_modules/*
