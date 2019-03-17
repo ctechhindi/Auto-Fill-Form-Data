@@ -1,6 +1,6 @@
 {
 	"name": "Auto Fill Form Data",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"description": "auto fill and autocomplete user data with key name",
 	"icons": {
 		"16": "img/icon16.png",
@@ -9,13 +9,10 @@
 		"128": "img/icon128.png"
 	},
 	"permissions": [
-		"notifications",
 		"storage",
 		"http://*/",
 		"https://*/",
-		"tabs",
-		"activeTab",
-		"contextMenus"
+		"tabs"
 	],
 	"background": {
 		"scripts": [

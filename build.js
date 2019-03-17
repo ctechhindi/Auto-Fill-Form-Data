@@ -33,7 +33,7 @@ var projectFiles = [
 ];
 
 repeat.init({
-  version: "0.0.2",
+  version: "0.0.3",
   basePath: __dirname,
   folders: projectFolders,
   files: projectFiles

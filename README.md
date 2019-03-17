@@ -1,10 +1,12 @@
-# Auto Fill Form Data V.0.0.2
+# Auto Fill Form Data V.0.0.3
 
 Auto fill and autocomplete user data with key name
 
 This extension is powered by `Jeevan Lal`.
 
-https://github.com/ctechhindi/Auto-Fill-Form-Data
+[GitHub](https://github.com/ctechhindi/Auto-Fill-Form-Data)
+
+[Download Extension](https://chrome.google.com/webstore/detail/auto-fill-form-data/elpamagjchljbnphjdoijokclpcmfjcn)
 
 ## Library
 
